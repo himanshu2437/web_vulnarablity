@@ -72,7 +72,7 @@ on severity:
 
 Final grade: A (90+) · B (75+) · C (60+) · D (40+) · F (below 40)
 
-## Possible Extensions (if you want to go further for evaluation)
+## Possible Extensions 
 
 - Add authenticated scanning (login + session cookie support)
 - Integrate `python-nmap` for deeper port/service fingerprinting
@@ -80,7 +80,7 @@ Final grade: A (90+) · B (75+) · C (60+) · D (40+) · F (below 40)
 - Web dashboard (Flask) instead of CLI
 - Scan history stored in SQLite to track risk score over time
 
-## Why This Project (for HOD/viva)
+## Why This Project 
 
 This tool mirrors real-world tasks in a SOC/AppSec workflow:
 reconnaissance (open ports, exposed paths), configuration auditing
