@@ -1,8 +1,8 @@
-# Web App Vulnerability Scanner
+# Web Application Vulnerability Scanner
 
-A Python-based vulnerability scanner for web applications, built as a
-semester project. It checks a target URL for common security
-misconfigurations and generates a scored risk report (console + PDF).
+A small Python command-line tool for authorized security checks against web
+applications. It looks for common configuration problems and produces a
+human-readable console summary, with an optional PDF report.
 
 ## ⚠️ Ethical Use
 
@@ -41,11 +41,13 @@ vuln_scanner/
 └── reports/                   # Generated PDF reports land here
 ```
 
-## Setup
+## Installation
 
 ```bash
 pip install -r requirements.txt
 ```
+
+Python 3.9 or newer is recommended.
 
 ## Usage
 
@@ -61,6 +63,10 @@ The `--i-have-permission` flag is a deliberate safeguard — the tool
 refuses to run without it, forcing the user to consciously confirm
 authorization before scanning any target.
 
+The scanner makes network requests and opens TCP connections. Use it only
+against systems you own or have written permission to assess. The port and
+path checks run concurrently to keep scans reasonably quick.
+
 ## How the Scoring Works
 
 Every scan starts at 100 points. Points are deducted per finding based
@@ -72,7 +78,7 @@ on severity:
 
 Final grade: A (90+) · B (75+) · C (60+) · D (40+) · F (below 40)
 
-## Possible Extensions 
+## Possible Extensions
 
 - Add authenticated scanning (login + session cookie support)
 - Integrate `python-nmap` for deeper port/service fingerprinting
@@ -80,7 +86,7 @@ Final grade: A (90+) · B (75+) · C (60+) · D (40+) · F (below 40)
 - Web dashboard (Flask) instead of CLI
 - Scan history stored in SQLite to track risk score over time
 
-## Why This Project 
+## Why This Project (for HOD/viva)
 
 This tool mirrors real-world tasks in a SOC/AppSec workflow:
 reconnaissance (open ports, exposed paths), configuration auditing

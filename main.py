@@ -1,31 +1,10 @@
 #!/usr/bin/env python3
-"""
-Web App Vulnerability Scanner
-==============================
-A mid-level security scanning tool that checks a target web application
-for common misconfigurations:
-    - Missing/weak HTTP security headers
-    - SSL/TLS certificate issues
-    - Open ports (common service ports)
-    - Exposed sensitive files/paths (robots.txt, .git, .env, admin panels)
-
-Produces a scored risk report (console + PDF).
-
-ETHICAL USE NOTICE:
-Only scan applications you own or are explicitly authorized to test
-(e.g. DVWA, testphp.vulnweb.com, or your own local test server).
-Scanning systems without permission may be illegal.
-
-Usage:
-    python main.py --url https://example.com
-    python main.py --url http://testphp.vulnweb.com --report
-"""
 
 import argparse
 import sys
 from urllib.parse import urlparse
 
-from modules import headers_check, ssl_check, port_scan, path_check, scorer
+from modules import headers_check, path_check, port_scan, scorer, ssl_check
 from modules.report_generator import generate_pdf_report
 
 
@@ -37,22 +16,27 @@ BANNER = r"""
     \  / (_| \__ \ || (_| |____) | (_| (_| | | | |
      \/ \__,_|___/\__\__,_|_____/ \___\__,_|_| |_|
 
-        Web App Vulnerability Scanner (Educational)
+        Web App Vulnerability Scanner
 """
 
 
 def validate_url(url: str) -> str:
-    """Ensure the URL has a scheme; default to http:// if missing."""
-    parsed = urlparse(url)
-    if not parsed.scheme:
-        url = "http://" + url
-    return url
+    """Return a normalized HTTP(S) URL or raise a useful validation error."""
+    value = url.strip()
+    if not value:
+        raise ValueError("The target URL cannot be empty.")
+
+    parsed = urlparse(value if "://" in value else f"http://{value}")
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+        raise ValueError("The target must be a valid HTTP or HTTPS URL.")
+
+    return parsed.geturl().rstrip("/")
 
 
 def run_scan(target_url: str):
     print(BANNER)
     print(f"[*] Target: {target_url}")
-    print(f"[*] Starting scan...\n")
+    print("[*] Starting scan...\n")
 
     results = {}
 
@@ -101,7 +85,11 @@ def main():
         )
         sys.exit(1)
 
-    target_url = validate_url(args.url)
+    try:
+        target_url = validate_url(args.url)
+    except ValueError as error:
+        parser.error(str(error))
+
     results, score_summary = run_scan(target_url)
 
     if args.report:
